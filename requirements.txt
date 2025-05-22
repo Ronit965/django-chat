@@ -22,3 +22,4 @@ daphne==4.0.0
 
 # For deployment (optional)
 # gunicorn==21.2.0
+gunicorn
