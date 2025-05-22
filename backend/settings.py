@@ -1,6 +1,11 @@
 from pathlib import Path
 import os
 
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://django-chat-z979.onrender.com',
+]
+
 if os.environ.get('RENDER'):
     ALLOWED_HOSTS = ['django-chat-z979.onrender.com']
 else:
@@ -19,9 +24,8 @@ SECRET_KEY = "django-insecure-^ha21r(u@l^=d)10pbph&_7g^0_8@p843!9_74@%)z8=u^)y6d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ '.onrender.com',  # Allows any subdomain of onrender.com
-    'localhost',
-    '127.0.0.1']
+ALLOWED_HOSTS = [ 'django-chat-z979.onrender.com']
+    
     
 
 
