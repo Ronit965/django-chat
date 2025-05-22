@@ -1,0 +1,24 @@
+# Django and core dependencies
+Django==5.0.4
+
+# Channels for WebSocket support
+channels==4.0.0
+
+# Daphne ASGI server for handling WebSockets
+daphne==4.0.0
+
+# ASGI Redis (optional if using Redis for channel layers instead of InMemoryChannelLayer)
+# channels_redis==4.1.0
+
+# For async database operations with Django ORM (already included in Django 3.1+)
+# No need to add separately unless you use extra database drivers
+
+# If you're using SQLite, it's built-in with Python
+# If using PostgreSQL, add: psycopg2==2.9.9 or psycopg2-binary==2.9.9
+
+# Optionally, for development
+# python-dotenv for environment variable management
+# python-dotenv==1.0.1
+
+# For deployment (optional)
+# gunicorn==21.2.0
