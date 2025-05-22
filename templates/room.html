@@ -241,25 +241,54 @@
   </div>
   <script>
 
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const socketURL = `${protocol}//${window.location.host}/ws/messages/{{room_name}}/`;
-    console.log("Establishing Socket Connection")
-    const socket = new WebSocket(socketURL)
+    // Use secure WebSocket (wss) for HTTPS and regular WebSocket (ws) for HTTP
+   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+   const socketURL = `${protocol}//${window.location.host}/ws/messages/{{room_name}}/`;
+   console.log("Connecting to:", socketURL);
+   const socket = new WebSocket(socketURL);
+
+   // Add connection event handlers for debugging
+   socket.onopen = function(event) {
+       console.log("WebSocket connected successfully");
+  };
+    socket.onerror = function(error) {
+       console.error("WebSocket error:", error);
+   };
+
+   socket.onclose = function(event) {
+       console.log("WebSocket connection closed:", event.code, event.reason);
+   };
 
     // Send Message to the backend
+  // Send Message to the backend
     const message_form = document.getElementById("msg-form")
     message_form.addEventListener("submit", function (event) {
-      event.preventDefault();
-      // console.log("Sending Message")
-      let message_sent = document.getElementById("message").value;
-      // console.log("Sending... ", message_sent);
-      socket.send(
-        JSON.stringify({
-          message: message_sent,
-          room_name: "{{room_name}}",
-          sender: "{{user}}",
-        })
-      );
+        event.preventDefault();
+        
+        let message_sent = document.getElementById("message").value.trim();
+        
+        if (message_sent === "") {
+            console.log("Empty message, not sending");
+            return;
+        }
+        
+        console.log("Sending message:", message_sent);
+        
+        const messageData = {
+            message: message_sent,
+            room_name: "{{room_name}}",
+            sender: "{{user}}",
+        };
+        
+        console.log("Message data:", messageData);
+        
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify(messageData));
+            console.log("Message sent successfully");
+        } else {
+            console.error("WebSocket is not open. Ready state:", socket.readyState);
+            alert("Connection lost. Please refresh the page.");
+        }
     });
 
     const chats_div = document.getElementById("chats-container")
