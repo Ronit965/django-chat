@@ -28,12 +28,10 @@
         width: 80%;
         max-width: 500px;
         padding: 2rem;
-        /* height: fit-content; */
         max-height: 80vh;
         background-color: #eef0f2;
         border-radius: 1rem;
         box-shadow: 0px 0px 1rem 0px rgba(0, 0, 0, 0.2);
-        /* overflow-y: scroll; */
 
         display: grid;
         grid-template-rows: fit-content auto fit-content;
@@ -43,12 +41,6 @@
       .content::-webkit-scrollbar {
         display: none;
       }
-
-      /* Hiding scrollbar for IE, Edge and Firefox */
-      /* .content {
-        scrollbar-width: none; 
-        -ms-overflow-style: none;
-      } */
 
       h1 {
         text-align: center;
@@ -67,7 +59,6 @@
       }
 
       button {
-        /* margin-top: 1rem; */
         border: 0;
         outline: 0;
         padding: 0.5rem 0.75rem;
@@ -82,7 +73,6 @@
 
       button:hover {
         background-color: #353a41;
-        /* justify-self: start; */
       }
 
       form {
@@ -112,9 +102,7 @@
       /* Hiding scrollbar for IE, Edge and Firefox */
       textarea {
         scrollbar-width: none;
-        /* Firefox */
         -ms-overflow-style: none;
-        /* IE and Edge */
       }
 
       .single-message {
@@ -160,9 +148,7 @@
       /* Hiding scrollbar for IE, Edge and Firefox */
       .chats-container {
         scrollbar-width: none;
-        /* Firefox */
         -ms-overflow-style: none;
-        /* IE and Edge */
       }
     </style>
   </head>
@@ -172,65 +158,23 @@
       <div class="content">
         <h1>Welcome to {{room_name}}</h1>
         <div class="chats-container" id="chats-container">
-          {% for message in messages %} {% if message.sender|lower == user|lower
-          %}
-          <div class="single-message sent">
-            <div class="msg-body">{{ message.message }}</div>
-            <p class="sender">Me</p>
-          </div>
-          {% else %}
-          <div class="single-message">
-            <div class="msg-body">{{ message.message }}</div>
-            <p class="sender">{{ message.sender }}</p>
-          </div>
-          {% endif %} {% endfor %}
-
-          <!-- <div class="single-message sent">
-            <div class="msg-body">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolores,
-              esse.
-            </div>
-            <p class="sender">Me</p>
-          </div>
-          <div class="single-message">
-            <div class="msg-body">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolores,
-              esse.
-            </div>
-            <p class="sender">Sender</p>
-          </div>
-          <div class="single-message sent">
-            <div class="msg-body">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolores,
-              esse.
-            </div>
-            <p class="sender">Me</p>
-          </div>
-          <div class="single-message">
-            <div class="msg-body">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolores,
-              esse.
-            </div>
-            <p class="sender">Sender</p>
-          </div>
-          <div class="single-message sent">
-            <div class="msg-body">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolores,
-              esse.
-            </div>
-            <p class="sender">Me</p>
-          </div>
-          <div class="single-message">
-            <div class="msg-body">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolores,
-              esse.
-            </div>
-            <p class="sender">Sender</p>
-          </div>-->
+          {% for message in messages %}
+            {% if message.sender|lower == user|lower %}
+              <div class="single-message sent">
+                <div class="msg-body">{{ message.message }}</div>
+                <p class="sender">Me</p>
+              </div>
+            {% else %}
+              <div class="single-message">
+                <div class="msg-body">{{ message.message }}</div>
+                <p class="sender">{{ message.sender }}</p>
+              </div>
+            {% endif %}
+          {% endfor %}
         </div>
+        
         <form action="" id="msg-form" method="post">
-          <!-- For the sake of security, all Django Post forms must have a csfr token tag -->
-          <!-- {% csrf_token %} -->
+          {% csrf_token %}
           <textarea
             name="message"
             id="message"
@@ -238,11 +182,11 @@
             rows="10"
             placeholder="Enter your message"
           ></textarea>
-
           <button type="submit">&#10003;</button>
         </form>
       </div>
     </div>
+    
     <script>
       // Use secure WebSocket (wss) for HTTPS and regular WebSocket (ws) for HTTP
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
@@ -250,25 +194,7 @@
       console.log("Connecting to:", socketURL);
       const socket = new WebSocket(socketURL);
 
-      // Add connection event handlers for debugging
-      socket.onopen = function (event) {
-        console.log("WebSocket connected successfully");
-      };
-      socket.onerror = function (error) {
-        console.error("WebSocket error:", error);
-      };
-
-      socket.onclose = function (event) {
-        console.log("WebSocket connection closed:", event.code, event.reason);
-      };
-
-      // NEW CODE (fixes the connection):
-      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const socketURL = `${protocol}//${window.location.host}/ws/messages/{{room_name}}/`;
-      console.log("Connecting to:", socketURL);
-      const socket = new WebSocket(socketURL);
-
-      // Add better error handling
+      // Add connection event handlers
       socket.onopen = function (event) {
         console.log("✅ WebSocket connected successfully");
       };
@@ -278,15 +204,12 @@
       };
 
       socket.onclose = function (event) {
-        console.log(
-          "🔌 WebSocket connection closed:",
-          event.code,
-          event.reason
-        );
+        console.log("🔌 WebSocket connection closed:", event.code, event.reason);
         if (event.code !== 1000) {
           alert("Connection lost. Please refresh the page.");
         }
       };
+
       const chats_div = document.getElementById("chats-container");
 
       // Scroll to bottom
@@ -294,10 +217,9 @@
         chats_div.scrollTop = chats_div.scrollHeight;
       };
 
-      // Recieve Message from the backend
+      // Receive Message from the backend
       socket.addEventListener("message", (e) => {
         const data = JSON.parse(e.data)["message"];
-
         console.log(data);
 
         let sender = data["sender"];
@@ -308,23 +230,37 @@
         }
 
         if (sender == "{{user}}") {
-          document.getElementById("message").value = "";
-        }
-
-        if (sender == "{{user}}") {
           chats_div.innerHTML += `<div class="single-message sent">
-          <div class="msg-body">${content}</div>
-          <p class="sender">Me</p>
-        </div>`;
+            <div class="msg-body">${content}</div>
+            <p class="sender">Me</p>
+          </div>`;
         } else {
           chats_div.innerHTML += `<div class="single-message">
-          <div class="msg-body">${content}</div>
-          <p class="sender">${sender}</p>
-        </div>`;
+            <div class="msg-body">${content}</div>
+            <p class="sender">${sender}</p>
+          </div>`;
         }
 
         scrollToBottom();
       });
+
+      // Handle form submission
+      document.getElementById('msg-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const messageInput = document.getElementById('message');
+        const message = messageInput.value.trim();
+        
+        if (message) {
+          socket.send(JSON.stringify({
+            'message': message,
+            'sender': '{{user}}'
+          }));
+          messageInput.value = '';
+        }
+      });
+
+      // Auto-scroll to bottom on page load
+      window.addEventListener('load', scrollToBottom);
     </script>
   </body>
 </html>
