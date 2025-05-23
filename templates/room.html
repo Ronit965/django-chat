@@ -172,19 +172,19 @@
       <div class="content">
         <h1>Welcome to {{room_name}}</h1>
         <div class="chats-container" id="chats-container">
-          {%for message in messages%} {% if message.sender.lower == user.lower
+          {% for message in messages %} {% if message.sender|lower == user|lower
           %}
           <div class="single-message sent">
-            <div class="msg-body">{{message.message}}</div>
+            <div class="msg-body">{{ message.message }}</div>
             <p class="sender">Me</p>
           </div>
-
           {% else %}
           <div class="single-message">
-            <div class="msg-body">{{message.message}}</div>
-            <p class="sender">{{message.sender}}</p>
+            <div class="msg-body">{{ message.message }}</div>
+            <p class="sender">{{ message.sender }}</p>
           </div>
-          {% endif %} {%endfor%}
+          {% endif %} {% endfor %}
+
           <!-- <div class="single-message sent">
             <div class="msg-body">
               Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolores,
