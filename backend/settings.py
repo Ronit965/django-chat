@@ -26,7 +26,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', "django-insecure-^ha21r(u@l^=d)10pbph&_7g^0_8@p843!9_74@%)z8=u^)y6d")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+DEBUG = True  # Only temporarily in deployment to catch the issue!
+
 
 # Production settings for Render
 if os.environ.get('RENDER'):
