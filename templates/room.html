@@ -408,32 +408,11 @@
                 this.messageInput.style.height = 'auto';
                 this.handleInputChange();
 
-                // Simulate receiving a response (for demo)
-                this.simulateIncomingMessage();
+                // Message sent - waiting for other user's response
             }
 
-            simulateIncomingMessage() {
-                // Simulate another user typing
-                setTimeout(() => {
-                    this.showTypingIndicator('Other User');
-                }, 500);
-
-                // Simulate receiving message
-                setTimeout(() => {
-                    this.hideTypingIndicator();
-                    const responses = [
-                        "That's interesting!",
-                        "I see what you mean.",
-                        "Thanks for sharing that.",
-                        "Really? Tell me more.",
-                        "I agree with you.",
-                        "That sounds great!",
-                        "What do you think about that?",
-                    ];
-                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                    this.receiveMessage(randomResponse, 'Other User');
-                }, 1500 + Math.random() * 1000);
-            }
+            // This method will be called when receiving real messages from other users via WebSocket
+            // No simulation - only real user messages
 
             sendToWebSocket(data) {
                 // In real implementation, this would be:
